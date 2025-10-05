@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A2A vs. MCP — Guía práctica</title>
+  <meta name="description" content="Comparativa clara entre A2A (Agent‑to‑Agent) y MCP (Model Context Protocol): arquitectura, comunicación, seguridad y usos recomendados.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>A2A vs. MCP</h1>
+      <nav>
+        <a href="#introduccion">Introducción</a>
+        <a href="#comparativa">Comparativa</a>
+        <a href="#usos">Usos prácticos</a>
+        <a href="#diagrama">Diagrama</a>
+      </nav>
+      <button id="themeToggle" aria-label="Cambiar tema">☀︎/☾</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="introduccion" class="card">
+      <h2>Introducción</h2>
+      <p>
+      Tras el lanzamiento de A2A (Agent-to-Agent) por Google, surgió la duda de si reemplazará al MCP (Model Context Protocol). En realidad, resuelven problemas distintos dentro de ecosistemas multi-agente: 
+      A2A se centra en comunicación entre agentes, mientras MCP se orienta a integración agente-a-herramienta. Ambos son complementarios para construir sistemas mediante agentes.</p>
+      <p>Información resumida desde:	https://www.linkedin.com/in/rakeshgohel01/</p>
+    </section>
+
+    <section id="diagrama" class="card">
+      <h2>Arquitectura MCP</h2>
+      <p>Arquitectura MCP</p>
+      <img src='assets/mcpgif.gif' alt='Arquitectura MCP' />
+    </section>
+
+    <section id="diagrama" class="card">
+      <h2>Arquitectura A2A</h2>
+      <p>Arquitectura A2A</p>
+      <img src='assets/a2agif.gif' alt='Arquitectura A2A' />
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>Arquitectura</h3>
+        <p>A2A: Flujo agente‑cliente remoto; los agentes pueden operar de forma privada y comunicarse sobre protocolos web seguros.</p>
+        <p>MCP: Modelo cliente‑servidor; el “agente/LLM (cliente)” se conecta a un servidor MCP (herramientas/recursos) vía HTTP, SSE o incluso stdio para integraciones locales.</p>
+      </article>
+      <article class="card">
+        <h3>Comunicación</h3>
+        <p>A2A: Flexible, conversacional y centrada en tareas; los agentes negocian formatos según capacidades (imagínalo como una “sala de conferencias”).
+        </p><p>MCP: I/O estructurado y rígido con schemas; funciona como un “taller de herramientas” que define entradas/salidas exactas.</p>
+      </article>
+      <article class="card">
+        <h3>Tipo de tareas</h3>
+        <p>A2A: Coordina el ciclo de vida completo de tareas, incluidas operaciones largas con múltiples agentes.</p>
+        <p>MCP: Enfocado en llamadas puntuales o interacciones cortas (consultar BD, llamar un API y traer un dato).</p>
+      </article>
+      <article class="card">
+        <h3>Descubrimiento</h3>
+        <p>A2A: “Agent Card” (JSON) anuncia capacidades y permite discovery.</p>
+        <p>MCP: Capacidades definidas por JSON Schemas de herramientas/recursos.</p>
+      </article>
+      <article class="card">
+        <h3>Seguridad</h3>
+        <p>A2A: Pensado para seguridad de nivel empresarial (authN/authZ robustas).</p>
+        <p>MCP: Requiere configuración adicional para acceso remoto seguro; no trae primitivas nativas para seguridad entre agentes.</p>
+      </article>
+    </section>
+
+    <section id="comparativa" class="card">
+      <h2>Cuadro comparativo</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspecto</th>
+              <th>A2A (Agent‑to‑Agent)</th>
+              <th>MCP (Model Context Protocol)</th>
+              <th>Implicancia práctica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Propósito</td>
+              <td>Comunicación y coordinación entre agentes</td>
+              <td>Conexión agente→herramienta/servicio con I/O tipado</td>
+              <td>Orquestador (A2A) + Adaptador de herramientas (MCP)</td>
+            </tr>
+            <tr>
+              <td>Arquitectura</td>
+              <td>Agentes remotos; privacidad; protocolos web seguros</td>
+              <td>Cliente (LLM) ↔ Servidor MCP (tools) por HTTP/SSE/stdio</td>
+              <td>A2A escala redes de agentes; MCP estandariza acceso</td>
+            </tr>
+            <tr>
+              <td>Estilo de mensaje</td>
+              <td>Conversacional, negociado, orientado a tareas</td>
+              <td>Schemas rígidos con entradas/salidas precisas</td>
+              <td>A2A = flexibilidad; MCP = precisión/contratos</td>
+            </tr>
+            <tr>
+              <td>Tipo de tarea</td>
+              <td>Larga duración, multietapas y multi‑agente</td>
+              <td>Discreta y corta (query/llamada/fetch)</td>
+              <td>A2A coordina; MCP ejecuta</td>
+            </tr>
+            <tr>
+              <td>Descubrimiento</td>
+              <td>Agent Card (JSON)</td>
+              <td>JSON Schema (tools/recursos)</td>
+              <td>Quién puede qué (A2A) vs. cómo llamarlo (MCP)</td>
+            </tr>
+            <tr>
+              <td>Seguridad</td>
+              <td>Enterprise‑grade (authN/authZ)</td>
+              <td>Configurable; sin primitives nativas a/a</td>
+              <td>Zero‑trust entre agentes vs. capa extra en MCP</td>
+            </tr>
+            <tr>
+              <td>Metáfora</td>
+              <td>“Sala de conferencias”</td>
+              <td>“Taller de herramientas”</td>
+              <td>Dos capas complementarias del mismo sistema</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+    <section id="diagrama" class="card">
+      <h2>Usos Prácticos</h2>
+      <p>Usos Prácticos</p>
+      <img src='assets/a2avsmcpGIF.gif' alt='Usos Prácticos' />
+    </section>
+
+    <section id="usos" class="card">
+      <h2>Usos prácticos y criterios</h2>
+      <ul>
+        <li>Usa A2A para orquestar agentes autónomos (planificador, ejecutor, verificador).</li><li>Usa MCP para acceder a tools tipadas: BD, APIs, Git/FS, RAG, mensajería.</li><li>Observabilidad: tracing por tarea (A2A) + logging I/O por tool (MCP).</li><li>Seguridad: RBAC/ABAC en A2A; mínimos privilegios por tool MCP.</li><li>Versionado: Agent Cards (A2A) y JSON Schemas (MCP) con validación contract‑first.</li><li>Migración: agrega A2A encima de tus tools MCP existentes o, si ya tienes A2A, formaliza tools con MCP.</li>
+      </ul>
+      <p class="note">Consejo rápido: diseña por capas. A2A coordina el “qué” y “cuándo”. MCP implementa el “cómo” contra sistemas reales.</p>
+    </section>
+
+    <section id="diagrama" class="card">
+      <h2>Diagrama de arquitectura</h2>
+      <p>Arquitectura recomendada: A2A para orquestación y MCP para acceso tipado a herramientas.</p>
+      <img src='assets/ArquitecturaA2A-MCP.png' alt='Diagrama A2A + MCP' />
+    </section>
+
+    <section class="card">
+      <h2>Fuentes</h2>
+      <ul>
+        <li><a href="https://rakeshgohel.com/" target="_blank" rel="noopener">rakeshgohel.com</a></li>
+        <li><a href="https://www.linkedin.com/in/rakeshgohel01/" target="_blank" rel="noopener">Perfil de LinkedIn (Rakesh Gohel)</a></li>
+      </ul>
+      <p class="tiny">Este documento es un resúmen de lo propuesto por Rakesh Gohel.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 A2A vs. MCP — Dr. Renzo Taco Coayla.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
