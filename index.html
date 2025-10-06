@@ -153,6 +153,64 @@
       <img src='assets/ArquitecturaA2A-MCP.png' alt='Diagrama A2A + MCP' />
     </section>
 
+    <section id="usos" class="card">
+      <h2>1.	Cuando usar cada uno:</h2>
+      <ul>
+        <li>Si tu problema requiere delegar tareas entre varias entidades con autonomía (planificador, ejecutor, verificador), usa A2A para la orquestación.</li>
+        <li>Si tu agente necesita leer archivos, consultar una base, pegarle a un API, o ejecutar una acción concreta con entrada/salida bien definida, usa MCP para el acceso tipado a herramientas.</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>2.	Arquitectura sugerida (capas):</h2>
+      <ul>
+        <li>Capa 1 (Orquestación): A2A arma y supervisa el flujo multi-agente (p. ej., planner → researcher → coder → tester).</li>
+        <li>Capa 2 (Ejecución de recursos): Cada agente expone/consume tools MCP para operaciones concretas (BD, CRM, Slack, Git, FS, etc.).</li>
+        <li>Beneficio: separas coordinación (A2A) de capabilities (MCP), reduciendo acoplamiento y facilitando pruebas.</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>3.	Observabilidad & SLAs:</h2>
+      <ul>
+          <li>Instrumenta tracing por tarea en A2A (IDs de correlación) y logging por tool en MCP (inputs/outputs con redaction de secretos).</li>
+          <li>Define reintentos y timeouts distintos: tolerantes en A2A (por etapas) y estrictos en MCP (por llamada).</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>4.	Seguridad pragmática:</h2>
+      <ul>
+        <li>Maneja credenciales y scopes a nivel MCP (mínimo necesario por herramienta).</li>
+        <li>En A2A, aplica políticas de autorización por rol (qué agente puede invocar a quién y para qué capability).</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>5.	Versionado y cambios:</h2>
+      <ul>
+          <li>Versiona Agent Cards (A2A) cuando cambian capacidades de un agente.</li>
+          <li>Versiona schemas MCP cada vez que modifiques inputs/outputs; usa validación contract-first para evitar breaking changes en tiempo de ejecución.</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>6.	Estrategia de migración:</h2>
+      <ul>
+        <li>Si hoy solo tienes MCP (un LLM con herramientas), añade A2A encima para coordinar varios agentes sin tocar tus tools.</li>
+        <li>Si hoy solo tienes A2A (agentes “hablando”), incorpora MCP para formalizar el acceso a sistemas y reducir errores de formato.</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>7.	Rendimiento y costos:</h2>
+      <ul>
+        <li>A2A añade overhead de coordinación; compénsalo con resúmenes y memoria compartida para limitar context churn.</li>
+        <li>MCP minimiza hallucinations al obligar I/O tipado; suele ahorrar tokens y fallos de parseo en tareas repetitivas.</li>
+      </ul>
+    </section>
+    <section id="usos" class="card">
+      <h2>8.	Patrones:</h2>
+      <ul>
+        <li>Investigación-redacción: A2A orquesta (researcher→writer→reviewer). Cada uno usa herramientas MCP (web-fetch, RAG, checker).</li>
+        <li>Soporte IT: A2A decide pasos del runbook; MCP invoca Jira, Terraform, Kubernetes, PagerDuty como tools tipadas.</li>
+      </ul>
+    </section>
+
     <section class="card">
       <h2>Fuentes</h2>
       <ul>
@@ -160,8 +218,9 @@
         <li><a href="https://www.linkedin.com/in/rakeshgohel01/" target="_blank" rel="noopener">Perfil de LinkedIn (Rakesh Gohel)</a></li>
       </ul>
       <p class="tiny">Este documento es un resúmen de lo propuesto por Rakesh Gohel.</p>
-    </section>
+    </section>    
   </main>
+
 
   <footer class="site-footer">
     <div class="container">
